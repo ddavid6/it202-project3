@@ -14,17 +14,19 @@
 
 <script>
 var canvas = document.getElementById("myCanvas");
+var randomy = Math.floor(Math.random() * 320)
+
 var ctx = canvas.getContext("2d");
 var ballRadius = 10;
-var x = canvas.width/2;
-var y = canvas.height-30;
+var x = canvas.width-10;
+var y = canvas.height-randomy;
 var dx = 2;
 var dy = -2;
 var paddleHeight = 75;
 var paddleWidth = 10;
-var UP = 38;
-var DOWN = 40;
-var paddleX =(0,1);
+//var UP = 0;
+//var DOWN = 0;
+var paddleX =0;
 var upPressed = false;
 var downPressed = false;
 var move = canvas.height-paddleHeight;
@@ -52,10 +54,21 @@ function keyUpHandler(e) {
 
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+    ctx.arc(x, randomy, ballRadius, 0, Math.PI*2);
     ctx.fillStyle = "#0095DD";
-    ctx.fill();
+    ctx.fill();  
+    ctx.stroke();
     ctx.closePath();
+}
+    
+function drawSquare(){
+    ctx.beginPath();
+    ctx.rect(x, randomy, 20, 20);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();  
+    ctx.stroke();
+    ctx.closePath();
+    
 }
 function drawPaddle() {
     ctx.beginPath();
@@ -68,12 +81,13 @@ function drawPaddle() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
+    drawSquare();
     drawPaddle();
     
     if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
         dy = -dy;
     }
-    if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+    if(x + dx > canvas.width-ballRadius){// || x + dx < ballRadius) {
         dx = -dx;
     }
     
@@ -90,8 +104,8 @@ function draw() {
         }
     }
     
-    x += dx;
-    y += dy ;
+   x += dx;
+    //y += dy ;
 }
 
 setInterval(draw, 10);
