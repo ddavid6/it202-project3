@@ -22,14 +22,19 @@ var x = canvas.width-10;
 var y = canvas.height-randomy;
 var dx = 2;
 var dy = -2;
-var paddleHeight = 75;
-var paddleWidth = 10;
+var paddleHeight = 30;
+var paddleWidth = 20;
 //var UP = 0;
 //var DOWN = 0;
 var paddleX =0;
+var hor_x = 0.5;
+var vert_y = 0.5;
+var delay = 50;
 var upPressed = false;
 var downPressed = false;
 var move = canvas.height-paddleHeight;
+var score = 0;
+  
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -59,6 +64,7 @@ function drawBall() {
     ctx.fill();  
     ctx.stroke();
     ctx.closePath();
+   
 }
     
 function drawSquare(){
@@ -77,12 +83,55 @@ function drawPaddle() {
     ctx.fill();
     ctx.closePath();
 }
+    
+function delayObj(){
+     
+        do {
+             setTimeout(function () {
+            drawball()
+              }, 2000);
+             setTimeout(function () {
+            drawSquare()
+              }, 2000);
+        }
+    while (score >= 0)
+    
+}
+
+function gameOver(){
+    if (score == -1){
+        alert('GAME OVER'),
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }       
+    }
+    
+ function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: " +score, 8, 20);
+}
+    
+function Scoring(){
+    if ( paddleX-30 <= x <= paddleX ){
+        score = score+1;
+        
+        }
+    else if (paddleX == drawSquare){
+        score -= score
+    }
+
+}
+
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawScore();
     drawBall();
-    drawSquare();
+    //drawSquare();
     drawPaddle();
+    //delayObj();
+    Scoring();
+    
     
     if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
         dy = -dy;
@@ -92,13 +141,13 @@ function draw() {
     }
     
     if(upPressed) {
-        move -= 7 ;
+        move -= 5 ;
         if (move + paddleHeight > canvas.height){
             move = canvas.height - paddleHeight;
         }
     }
     else if(downPressed) {
-        move += 7;
+        move += 5;
         if (move < 0){
             move = 0;
         }
