@@ -10,30 +10,32 @@
 </head>
 <body>
 
-<canvas id="myCanvas" width="480" height="320"></canvas>
+<canvas id="myCanvas" width="500" height="500"></canvas>
 
 <script>
 var canvas = document.getElementById("myCanvas");
-var randomy = Math.floor(Math.random() * 320)
+var randomy = Math.floor(Math.random() * 450)
 
 var ctx = canvas.getContext("2d");
 var ballRadius = 10;
-var x = canvas.width-10;
-var y = canvas.height-randomy;
-var dx = 2;
-var dy = -2;
+var ox = canvas.width-10;
+var oy = canvas.height-randomy;
+var sx = canvas.width-100;
+var sy = canvas.height-randomy;
+var dox = 2;
+var doy = -2;
+var dsx = 2;
+var dsy = -2;
 var paddleHeight = 30;
 var paddleWidth = 20;
 //var UP = 0;
 //var DOWN = 0;
 var paddleX =0;
-var hor_x = 0.5;
-var vert_y = 0.5;
-var delay = 50;
 var upPressed = false;
 var downPressed = false;
 var move = canvas.height-paddleHeight;
 var score = 0;
+
   
 
 document.addEventListener("keydown", keyDownHandler, false);
@@ -59,7 +61,7 @@ function keyUpHandler(e) {
 
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, randomy, ballRadius, 0, Math.PI*2);
+    ctx.arc(ox, randomy, ballRadius, 0, Math.PI*2);
     ctx.fillStyle = "#0095DD";
     ctx.fill();  
     ctx.stroke();
@@ -69,7 +71,7 @@ function drawBall() {
     
 function drawSquare(){
     ctx.beginPath();
-    ctx.rect(x, randomy, 20, 20);
+    ctx.rect(sx, randomy, 20, 20);
     ctx.fillStyle = "#0095DD";
     ctx.fill();  
     ctx.stroke();
@@ -83,20 +85,21 @@ function drawPaddle() {
     ctx.fill();
     ctx.closePath();
 }
-    
-function delayObj(){
-     
-        do {
-             setTimeout(function () {
-            drawball()
-              }, 2000);
-             setTimeout(function () {
-            drawSquare()
-              }, 2000);
-        }
-    while (score >= 0)
-    
+var fn = [drawBall,drawSquare];   
+
+    function randomNumber() {
+	return Math.floor( Math.random() * 1 );
+   
 }
+function runGame(){
+    
+    drawBall();
+    setInterval(function(){
+        drawSquare(); 
+    }, 1000);
+}
+
+
 
 function gameOver(){
     if (score == -1){
@@ -112,12 +115,19 @@ function gameOver(){
 }
     
 function Scoring(){
-    if ( paddleX-30 <= x <= paddleX ){
-        score = score+1;
+   if ( paddleX-30 <= ox <= paddleX ){
+    
+       do{
+           score++;
+       }
+       while(score < 0);
+         
+   }  
         
-        }
-    else if (paddleX == drawSquare){
-        score -= score
+   if (paddleX-30 <= sx <= paddleX){
+       do{
+           score--;
+       }while(score < 0);
     }
 
 }
@@ -126,18 +136,34 @@ function Scoring(){
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawScore();
-    drawBall();
+    //drawBall();
     //drawSquare();
     drawPaddle();
     //delayObj();
     Scoring();
+    runGame();
     
     
-    if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
-        dy = -dy;
+setInterval(function(){
+        runGame(); 
+    }, 2000);
+   
+    
+    
+    
+    
+    if(sy + dsy > canvas.height-ballRadius || sy + dsy < ballRadius) {
+        dsy = -dsy;
     }
-    if(x + dx > canvas.width-ballRadius){// || x + dx < ballRadius) {
-        dx = -dx;
+    if(sx + dsx > canvas.width-ballRadius){// || x + dx < ballRadius) {
+        dsx = -dsx;
+    }
+    
+     if(oy + doy > canvas.height-ballRadius || oy + doy < ballRadius) {
+        doy = -doy;
+    }
+    if(ox + dox > canvas.width-ballRadius){// || x + dx < ballRadius) {
+        dox = -dox;
     }
     
     if(upPressed) {
@@ -153,7 +179,8 @@ function draw() {
         }
     }
     
-   x += dx;
+   ox += dox;
+   sx += dsx;
     //y += dy ;
 }
 
